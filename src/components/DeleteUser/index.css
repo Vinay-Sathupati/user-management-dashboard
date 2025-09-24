@@ -1,0 +1,121 @@
+.modal {
+    background-color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    padding: 25px;
+    border-radius: 20px;
+    width: 650px;
+    min-height: 500px;
+}
+.modal > .header {
+  font-family: 'Hanken Grotesk';
+  font-size: 32px;
+  font-weight: 600;
+  color: #111;
+  
+}
+
+.modal > .content {
+    font-family: 'Hanken Grotesk';
+    padding: 10px 5px;
+    margin-top: 10px;
+}
+.modal > .actions {
+  width: 100%;
+  padding: 10px 5px;
+  margin: auto;
+  text-align: center;
+
+}
+.modal > .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+}
+
+.add-confirmation-text{
+    font-family: 'Hanken Grotesk';
+    font-size: 22px;
+    font-weight: 500;
+    margin: 15px;
+}
+
+.form-loader-container,
+.form-failure-container,
+.render-success-main-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-failure-container,
+.render-success-main-container{
+    flex-direction: column;
+}
+
+.failure-icon, .success-tick-icon{
+    height: 50px;
+    width: 50px;
+}
+
+.success-heading{
+    font-family: 'Hanken Grotesk';
+    font-size: 32px;
+    font-weight: 600;
+    color: #111;
+}
+
+.success-para {
+    font-family: 'Hanken Grotesk';
+    font-size: 22px;
+    font-weight: 500;
+    color: #111;
+    margin-bottom: 25px;
+}
+
+
+.delete-confirm-button, 
+.close-button,
+.success-ok-button{
+    font-family: 'Hanken Grotesk';
+    font-size: 20px;
+    font-weight: 500;
+    height: 40px;
+    width: 200px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    background-color: #D3D3D3;
+}
+
+
+.delete-confirm-button{
+    width: 120px;
+    background-color:  #ff5f57;
+    color: #21242D;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.close-button{
+    width: 100px;
+    background-color: #D3D3D3;
+    color: #21242D;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.success-ok-button{
+    background-color: #ff5f57;
+    color: #21242D;
+}

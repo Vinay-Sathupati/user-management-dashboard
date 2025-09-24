@@ -1,0 +1,188 @@
+.add-new-user-main-container{
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-new-user-main-container-form{
+    width: 50%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 10px;
+    padding: 25px;
+    margin-top: 20px;
+}
+
+.form-first-last-name-email-department-container{
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+}
+
+.name-input-container, 
+.email-input-container,
+.department-input-container{
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin: 10px;
+}
+
+.label-heading{
+    font-family: 'Hanken Grotesk';
+    font-size: 22px;
+    font-weight: 500;
+    color: #111;
+    margin-bottom: 5px;
+    width: 170px;
+}
+
+.star-mark{
+    color: #f80404;
+}
+
+.input-element{
+    width: 100%;
+    height: 45px;
+    border-radius: 8px;
+    outline: none;
+    font-family: 'Hanken Grotesk';
+    font-size: 20px;
+    padding: 8px;
+    border: #2f3437 solid 1px;
+    color: #111;
+}
+
+.submit-cancel-button-container{
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.save-user-button, 
+.cancel-button, 
+.add-confirm-button, 
+.close-button,
+.success-add-ok-button{
+    font-family: 'Hanken Grotesk';
+    font-size: 20px;
+    font-weight: 500;
+    height: 40px;
+    width: 200px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    background-color: #D3D3D3;
+}
+
+.save-user-button{
+    background-color: #2563eb;
+    color: #fff;
+}
+
+.add-confirm-button{
+    width: 100px;
+    background-color:  #32a852;
+    color: #fff;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.close-button{
+    width: 100px;
+    background-color: #D3D3D3;
+    color: #21242D;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.success-add-ok-button{
+    background-color: #32a852;
+    color: #fff;
+}
+
+.modal {
+    background-color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    border-radius: 20px;
+    width: 650px;
+    height: 400px;
+}
+.modal > .header {
+  font-family: 'Hanken Grotesk';
+  font-size: 32px;
+  font-weight: 600;
+  color: #111;
+}
+
+.modal > .content {
+    font-family: 'Hanken Grotesk';
+    padding: 10px 5px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.modal > .actions {
+  width: 100%;
+  padding: 10px 5px;
+  margin: auto;
+  text-align: center;
+}
+.modal > .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+}
+
+.add-confirmation-text{
+    font-family: 'Hanken Grotesk';
+    font-size: 22px;
+    font-weight: 500;
+    margin: 15px;
+}
+
+.form-loader-container,
+.form-failure-container,
+.render-success-main-container{
+    height: 400px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-failure-container,
+.render-success-main-container{
+    flex-direction: column;
+}
+
+.failure-icon, .success-tick-icon{
+    height: 50px;
+    width: 50px;
+}
+
+.success-heading{
+    font-family: 'Hanken Grotesk';
+    font-size: 32px;
+    font-weight: 600;
+    color: #111;
+}
+
+.success-para {
+    font-family: 'Hanken Grotesk';
+    font-size: 22px;
+    font-weight: 500;
+    color: #111;
+    margin-bottom: 25px;
+}

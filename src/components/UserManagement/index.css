@@ -1,0 +1,44 @@
+.user-list-main-container{
+    padding: 25px;
+}
+
+.top-section-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.unordered-list-tabs {
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  gap: 10px;
+}
+
+.tab-btn{
+  color: #2f3437;
+  background-color: transparent;
+  border: none;
+  border-bottom: #2f3437 solid 1px;
+  padding: 10px;
+  font-family: 'Hanken Grotesk';
+  font-size: 20px;
+  font-weight: 500;
+  height: 40px;
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+}
+
+.active-tab-btn {
+  color: #2563eb;
+  border-bottom: #2563eb solid 2px;
+  padding: 5px;
+}
+
+
+.horizontal-line{
+    opacity: 0.5;
+    color: #2f3437;
+}

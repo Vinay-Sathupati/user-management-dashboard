@@ -1,0 +1,85 @@
+.user-data-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.view-user-info-container{
+    height: 100%;
+    width: 50%;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background: #fff;
+}
+
+.find-button{
+    font-family: 'Hanken Grotesk';
+    font-size: 20px;
+    font-weight: 500;
+    height: 40px;
+    width: 200px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    background-color: #fc7f12;
+    color: #fff;
+}
+
+.view-label-heading{
+    font-family: 'Hanken Grotesk';
+    font-size: 22px;
+    font-weight: 500;
+    color: #111;
+    margin-bottom: 5px;
+}
+
+.userid-input-container{
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.view-loader-container{
+    height: 300px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.view-input-element{
+    width: 200px;
+    height: 45px;
+    border-radius: 8px;
+    outline: none;
+    font-family: 'Hanken Grotesk';
+    font-size: 20px;
+    padding: 8px;
+    border: #2f3437 solid 1px;
+    color: #111;
+}
+
+.user-name{
+    font-family: 'Hanken Grotesk';
+    font-weight: 700;
+    color: #111;
+    font-size: 32px;
+}
+
+.user-email-title, .user-id-title, .user-department-title{
+    font-family: 'Hanken Grotesk';
+    font-weight: 700;
+    color: #2f3437;
+    font-size: 24px;
+    opacity: 0.7;
+}
+
+.sub-title{
+    color: #111;
+    opacity: none;
+}
