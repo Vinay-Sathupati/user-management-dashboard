@@ -10,7 +10,7 @@ import { PulseLoader } from "react-spinners"
 import { TbError404 } from "react-icons/tb"
 import { SiTicktick } from "react-icons/si"
 
-
+// API status constants to be used for loading, failure, success views
 const apiEditStatusConstants = {
     initial: 'INITIAL',
     inProgress: 'IN_PROGRESS',
@@ -18,10 +18,11 @@ const apiEditStatusConstants = {
     failure: 'FAILURE'
 }
 
-
+// Edit pop-up component using state (Child Component for UserDashboard Component)
 class EditPopup extends Component{
     state = {apiEditStatus: apiEditStatusConstants.initial, userData: {...this.props.userData}, failureMsg:''}
 
+    // updates the corresponding state userData key as user types in that particular field
     onEditUserDetails = event =>{
         const {name,value} = event.target
         this.setState(prevState => ({
@@ -32,8 +33,9 @@ class EditPopup extends Component{
         }))
     }
 
+    // updates the exisiting user data with PUT method
     onSaveEditedData = async () =>{
-        this.setState({apiEditStatus:apiEditStatusConstants.inProgress})
+        this.setState({apiEditStatus:apiEditStatusConstants.inProgress}) // API status is set to progress so spinner/ loading is displayed till fetching data is complete
         const {userData} = this.state
         const url = `https://jsonplaceholder.typicode.com/users/${userData.id}`
         const params = {
@@ -44,14 +46,14 @@ class EditPopup extends Component{
         try{
             const response = await axios.put(url, params)
             console.log("response:", response.data)
-            this.setState({apiEditStatus:apiEditStatusConstants.success})
+            this.setState({apiEditStatus:apiEditStatusConstants.success}) // renders success 
         } catch (error) {
             console.log("Error:", error.message)
-            this.setState({failureMsg: error.message, apiEditStatus:apiEditStatusConstants.failure})
+            this.setState({failureMsg: error.message, apiEditStatus:apiEditStatusConstants.failure})  // renders failure with failure msg
         }
     }
     
-
+    // Chooses which content to render based on API status
     renderPopupContent = ()=>{
         const {apiEditStatus}=this.state
         switch (apiEditStatus) {
@@ -68,6 +70,7 @@ class EditPopup extends Component{
         }
     }
 
+    // initially displays user details in input fields to edit
     renderEditInitialView = () =>{
         const {userData} = this.state
         const {onClose} = this.props
@@ -76,6 +79,7 @@ class EditPopup extends Component{
                 <div className="header">Update User Details</div>
                 <div className="content">
                     <div className="form-first-last-name-email-department-container">
+                        {/* maintained common function for all the input fields to update the state */}
                         <div className="name-input-container">
                             <label className="label-heading" htmlFor="first-name">First Name<span className="star-mark">*</span></label>
                             <input required className="input-element" id="first-name" type="text" placeholder="Enter First Name" name="firstName" value={userData.firstName} onChange={this.onEditUserDetails}/>
@@ -97,10 +101,12 @@ class EditPopup extends Component{
                         <button
                             className="edit-confirm-button"
                             type="button"
+                            // will update the user data to API with PUT method
                             onClick={this.onSaveEditedData}
                         >
                             Update Changes
                         </button>
+                        {/* on clicking cancel will close the pop-up */}
                         <button
                             className="close-button"
                             type="button"
@@ -115,25 +121,27 @@ class EditPopup extends Component{
         )
     }
 
+    //used to display failure msg when failed fetching data
     renderEditFailureView = () =>{
-            const {failureMsg} = this.state
-            return (
-                <div className='form-failure-container'>
-                    <TbError404 className="failure-icon" />
-                    <p className='failure-para'>{failureMsg}</p>
-                    <button 
-                        className='try-again-button' 
-                        onClick={() => {
-                            this.setState({ apiEditStatus: apiEditStatusConstants.initial });
-                            this.props.onClose();
-                        }}
-                    >
-                        Please Try Again
-                    </button>
-                </div>
-            )
-        }
-
+        const {failureMsg} = this.state
+        return (
+            <div className='form-failure-container'>
+                <TbError404 className="failure-icon" />
+                <p className='failure-para'>{failureMsg}</p>
+                <button 
+                    className='try-again-button' 
+                    onClick={() => {
+                        this.setState({ apiEditStatus: apiEditStatusConstants.initial });
+                        this.props.onClose();
+                    }}
+                >
+                    Please Try Again
+                </button>
+            </div>
+        )
+    }
+    
+    // used to display success msg on success updating data
     renderEditSuccessView = () =>{
         return(
             <>
@@ -143,7 +151,8 @@ class EditPopup extends Component{
                     <p className='success-para'>User updated successfully.</p>
                     <button 
                         type="button" 
-                        className='success-edit-ok-button' 
+                        className='success-edit-ok-button'
+                        // on clicking will close the pop-up 
                         onClick={
                             this.props.onClose
                         }
@@ -155,6 +164,7 @@ class EditPopup extends Component{
         )
     }
 
+    // used to display a spinner while fetching data (during a fetch request to the API)
     renderEditLoadingView = () => (
         <div className='form-loader-container'>
             <PulseLoader color="#ffbd2e" />

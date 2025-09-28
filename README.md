@@ -28,12 +28,23 @@ Built using **React** for the frontend integrated with a **mock backend API (JSO
   1. **User Dashboard**
   2. **Add User Form** 
   3. **User Details**
+
 ---
 ### 📋 User Dashboard
 - Displays a **list of all users**  in a table.
 - Supports **searching, sorting, and filtering**.
 - Clean **tabular layout** for better readability.
-- Filter users by fields like `firstName`, `lastName`, `email`, etc.
+- **Filtering:** Users can be filtered globally across the entire list by fields like `firstName`, `lastName`, `email`, `department` or `ID`.
+- **Sorting:** Sorting is applied only to the users displayed on the current page, ensuring fast rendering for paginated data.
+
+---
+### 📂 Pagination
+- The dashboard uses **pagination** to efficiently display large datasets.
+- **Users per page:** 5 (configurable via usersPerPage state).
+- **Pagination Logic:**
+    1. Calculates total pages based on the user list.
+    2. Shows numbered buttons for direct page access.
+    3. Includes Previous and Next arrows for navigation.
 
 ---
 ### ✏️ Edit & Delete Pop-ups
@@ -47,7 +58,7 @@ Built using **React** for the frontend integrated with a **mock backend API (JSO
   - Displays a confirmation message before final deletion.
   - Shows success message upon deletion.
 
-  ---
+---
 ### 📝 User Form Page
 -  Add a new user with required details.
 - Includes **form validations**:
@@ -103,6 +114,19 @@ src/
 ```
 ---
 
+## 📸 Screenshots
+
+- Dashboard Page
+![UserList_Dashboard_Page](public/images/dashboard.jpg)
+
+- Add New User Page
+![Add_New_User_Page](public/images/add_new_user_page.jpg)
+
+- View Existing User
+![View_Existing_User_Page](public/images/view_exisiting_user_page.jpg)
+
+
+---
 ## 🚦 Getting Started
 
 ### 1️⃣ Clone the Repository  

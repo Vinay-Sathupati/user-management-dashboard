@@ -1,19 +1,20 @@
 import { Component } from 'react'
-import axios from 'axios'
+import axios from 'axios' //axios for fetching data
 
 import { PulseLoader } from "react-spinners"
 
 import './index.css'
 
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { FaFilter } from "react-icons/fa"
 import { BsFilterRight } from "react-icons/bs"
 import { IoSearchSharp } from "react-icons/io5"
 
-
-
 import EditPopup from '../EditUser'
 import DeletePopup from '../DeleteUser'
 
+
+// API status constants to be used for loading, failure, success views
 const apiStatusConstants = {
     initial: 'INITIAL',
     inProgress: 'IN_PROGRESS',
@@ -21,7 +22,7 @@ const apiStatusConstants = {
     failure: 'FAILURE',
 }
 
-
+//options for filtering by category
 const filterByOptions = [
     {id: "firstName", displayText: "First Name"},
     {id: "lastName", displayText: "Last Name"},
@@ -30,7 +31,8 @@ const filterByOptions = [
     {id: "department", displayText: "Department"}
 ]
 
-export const sortByOptions = [
+// options for sorting
+const sortByOptions = [
     {id: 'id_1_9', displayText: 'ID \u2193'},
     {id: 'id_9_1', displayText: 'ID \u2191'},
     {id: 'firstName_A_Z', displayText: 'First Name (A-Z \u2193)'},
@@ -43,24 +45,28 @@ export const sortByOptions = [
     {id: 'department_Z_A', displayText: 'Department (Z-A \u2191)'},
 ]
 
+// Dashboard component using state (Child Component for UserManagement Component)
 class UserDashboard extends Component{
     state={
-        apiStatus: apiStatusConstants.initial, 
+        apiStatus: apiStatusConstants.initial,
         userListData:[], 
         filterby: filterByOptions[0].id,
         searchInput:'',
         sortby: sortByOptions[0].id,
-        failureMsg:'',
-        editingRowUserId: null,
-        editingRowUserData: null,
-        deletingRowUserId: null
+        failureMsg:'', 
+        editingRowUserId: null, //tracks which user row is currently being edited to open EditPopup
+        editingRowUserData: null, //userData(object) of a particular row in a list to pass it to EditPopup component
+        deletingRowUserId: null, //userID of a particular row in a list to pass it to DeletePopup component
+        currentPage: 1, // for pagination
+        usersPerPage: 5 // for pagination
     }
 
+    // fetch users list on first render of the page
     componentDidMount(){
         this.getUsersList()
     }
 
-    // function for correct name display:
+    // function for first and last name display, removes any prefixes
     nameCorrection = (name, firstOrLast) =>{
         const prefixes = ["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]
         const nameArr = name.split(" ")
@@ -79,9 +85,9 @@ class UserDashboard extends Component{
 
     }
 
-
+    // fetches data and maps it to userListData
     getUsersList = async () =>{
-        this.setState({apiStatus: apiStatusConstants.inProgress})
+        this.setState({apiStatus: apiStatusConstants.inProgress}) // API status is set to progress so spinner/ loading is displayed till fetching data is complete
         const url = 'https://jsonplaceholder.typicode.com/users'
         try {
             const response = await axios.get(url)
@@ -95,7 +101,7 @@ class UserDashboard extends Component{
             }))
             
             this.setState({userListData: updatedData, apiStatus:apiStatusConstants.success})
-            this.props.updateUserListData(updatedData)
+            this.props.updateUserListData(updatedData) //updating parent component user list data after successful fetch
         } catch (error) {
             console.log('Error:', error.message)
             this.setState({failureMsg: error.message, apiStatus:apiStatusConstants.failure})
@@ -103,21 +109,24 @@ class UserDashboard extends Component{
         
     }
 
+    // event handler for filter dropdown
     onChangeFilterBy = event =>{
         this.setState({filterby: event.target.value})
     }
 
+    // event handler for sort dropdown
     onChangeSortBy = event =>{
         this.setState({sortby: event.target.value})
     }
 
-    
+    // used to display a spinner while fetching data (during a fetch request to the API)
     renderLoadingView = () => (
         <div className='loader-container'>
             <PulseLoader color="#325ea8" />
         </div>
     )
 
+    //used to display failure msg when failed fetching data
     renderFailureView = () =>{
         const {failureMsg} = this.state
         return (
@@ -130,14 +139,28 @@ class UserDashboard extends Component{
         )
     }
 
+    // used to display successful UI with usersList and their details
     renderSuccessView = () =>{
-        const {userListData, filterby, sortby, editingRowUserId, deletingRowUserId, searchInput} = this.state
+        const {userListData, filterby, sortby, editingRowUserId, deletingRowUserId, searchInput, currentPage, usersPerPage} = this.state
+                
+        // filters the list globally from the complete usersList
         let filterData = userListData.filter(user=>{
             const fieldData = user[filterby].toString().toLowerCase()
             return fieldData.includes(searchInput.toLowerCase())
         })
 
-        let sortedData = [...filterData];
+        let numberOfPages = [] // Array - number of pages for pagination
+        const totalPages = Math.ceil(filterData.length/usersPerPage) //recalculates number of pages on every filtering
+        for (let i=1;i<=totalPages ; i++){ // iterating and pushing numbers to be displayed based on length of users list
+            numberOfPages.push(i)
+        }
+
+        const indexOfLastUser = currentPage * usersPerPage // introducing last index to slice the users list for pagination
+        const indexOfFirstUser = indexOfLastUser - usersPerPage // introducing first index to slice the users list for pagination
+        const currentPageUsers = filterData.slice(indexOfFirstUser, indexOfLastUser) // slicing the usersList for pagination and display only the currentpage list (5 users per page are being displayed)
+
+        // sorts the list only from the current page that is being displayed
+        let sortedData = [...currentPageUsers];
             switch (sortby) {
             case "firstName_A_Z":
                 sortedData.sort((a,b)=> a.firstName.localeCompare(b.firstName));
@@ -161,18 +184,20 @@ class UserDashboard extends Component{
                 sortedData.sort((a,b)=> a.email.localeCompare(b.email));
                 break;
             case "email_Z_A":
-                sortedData.sort((a,b)=> a.email.localeCompare(b.email));
+                sortedData.sort((a,b)=> b.email.localeCompare(a.email));
                 break;
             case "department_A_Z":
                 sortedData.sort((a,b)=> a.department.localeCompare(b.department));
                 break;
             case "department_Z_A":
-                sortedData.sort((a,b)=> a.department.localeCompare(b.department));
+                sortedData.sort((a,b)=> b.department.localeCompare(a.department));
                 break;
             default:
                 break;
         }
 
+
+        
         return (
              <>
                 <div className='filter-search-sort-container'>
@@ -188,12 +213,14 @@ class UserDashboard extends Component{
                     <div className='search-container'>
                         <input 
                             type="search" 
-                            className='seach-input-element' 
+                            id='user-search-input'
+                            className='seach-input-element'
+                            // updates placeholder based on the filterby dropdown selected  
                             placeholder= {`Search users by ${filterByOptions.find(eachObj=> eachObj.id===filterby).displayText}...`}
                             value={searchInput}
-                            onChange={event=>this.setState({searchInput:event.target.value})}
+                            onChange={event=>this.setState({searchInput:event.target.value, currentPage: 1})}
                         />
-                        <button type='button' className='search-icon-button'>
+                        <button type='button' className='search-icon-button' onClick={()=>{document.getElementById("user-search-input").focus()}}> {/* when clicked on icon focuses search input element */}
                             <IoSearchSharp  className='search-icon' />
                         </button>
                     </div>
@@ -226,6 +253,7 @@ class UserDashboard extends Component{
                             </tr>
                         </thead>
                         <tbody>
+                            {/* renders each user with edit and delete options */}
                             {sortedData.map(eachObj=>(
                                 <tr key={eachObj.id}>
                                     <td>{eachObj.id}</td>
@@ -239,8 +267,7 @@ class UserDashboard extends Component{
                                             {editingRowUserId === eachObj.id && 
                                                 <EditPopup
                                                     userData={eachObj}
-                                                    onClose={() => this.setState({ editingRowUserId: null })}
-                                                                                                        
+                                                    onClose={() => this.setState({ editingRowUserId: null })}                                                        
                                                 />
                                             }
                                             
@@ -258,6 +285,28 @@ class UserDashboard extends Component{
                             ))}
                         </tbody>
                     </table>
+                    <hr className='paginate-horizontal-line'/>
+                    <div className='pagination-number-buttons'> 
+                        <button 
+                            type='button' 
+                            className='pagination-button'
+                            // previous button -> to move to previous page, prevents going below page 1
+                            onClick={()=>{this.setState(prevState=>({currentPage: Math.max(prevState.currentPage -1,1)}))}}
+                        >
+                            <IoIosArrowBack className='arrow-icon' />
+                        </button>
+                        {numberOfPages.map((eachNum,index)=>(
+                            <button key={index} type='button' className={`pagination-button ${currentPage === eachNum ? 'active-pagination-btn' : ''}`} onClick={()=>this.setState({currentPage: eachNum})}>{eachNum}</button>
+                        ))}
+                        <button 
+                            type='button' 
+                            className='pagination-button' 
+                            // next button -> to move to next page, prevents going beyond last page
+                            onClick={()=>{this.setState(prevState=>({currentPage: Math.min(prevState.currentPage + 1, totalPages)}))}}
+                        >
+                            <IoIosArrowForward className='arrow-icon' />
+                        </button>
+                    </div>
                 </div>
             </>
         )

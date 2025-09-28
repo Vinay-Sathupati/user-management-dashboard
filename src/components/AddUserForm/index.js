@@ -8,6 +8,7 @@ import { SiTicktick } from "react-icons/si"
 
 import './index.css'
 
+// API status constants to be used for loading, failure, success views
 const apiStatusConstants = {
     initial: 'INITIAL',
     inProgress: 'IN_PROGRESS',
@@ -15,6 +16,7 @@ const apiStatusConstants = {
     failure: 'FAILURE',
 }
 
+// Add New User Form component using state (Child Component for UserManagement Component)
 class AddUserForm extends Component{
     state = {
         apiStatus: apiStatusConstants.initial,
@@ -23,17 +25,20 @@ class AddUserForm extends Component{
             lastName: '',
             email: '',
             department: ''
-        },
+        }, // stores input values from form
         isPopupOpen: false,
-        successData: '',
-        failureMsg:''
+        successData: '', // stores response after successfully adding a user
+        failureMsg:'' // stores error msg if adding user fails
     }
 
+
+    // prevents default behaviour on form submission and opens confirmation pop-up
     onSubmitNewUserForm = async (event) =>{
         event.preventDefault()
         this.setState({isPopupOpen:true})        
     }
 
+    // resets the form fields to empty values
     onCancelChanges = () =>{
         this.setState({
             userDetails: {
@@ -45,8 +50,9 @@ class AddUserForm extends Component{
         })
     }
 
+    // POSTs new user data and updates API status based on success or failure response
     postNewUser = async ()=>{
-        this.setState({apiStatus:apiStatusConstants.inProgress})
+        this.setState({apiStatus:apiStatusConstants.inProgress}) // API status is set to progress so spinner/ loading is displayed till fetching data is complete
         const {userDetails} = this.state
         const url = 'https://jsonplaceholder.typicode.com/users'
         const params = {
@@ -55,29 +61,32 @@ class AddUserForm extends Component{
             department: userDetails.department
         }
         
+        // validates that user email doesn't already exist before sending request
         const userExists = this.props.userData.some(user=>
             user.email.toLowerCase() === userDetails.email.toLowerCase()
         )
         if (userExists){
-            this.setState({failureMsg: "User with this email already exists!", apiStatus: apiStatusConstants.failure})
+            this.setState({failureMsg: "User with this email already exists!", apiStatus: apiStatusConstants.failure}) // renders failure with failure msg-> user already exists
             return
         }
 
         try{
             const response = await axios.post(url, params)
             console.log("response:", response.data)
-            this.setState({successData: response.data, apiStatus:apiStatusConstants.success})
+            this.setState({successData: response.data, apiStatus:apiStatusConstants.success}) // for displaying success msg
         } catch (error) {
             console.log("Error:", error.message)
-            this.setState({failureMsg: error.message, apiStatus:apiStatusConstants.failure})
+            this.setState({failureMsg: error.message, apiStatus:apiStatusConstants.failure}) // for displaying failure msg
         }
     }
 
+    // updates the corresponding state userDetails key as user types in that particular field
     onEnterUserDetails = event =>{
         const {name,value} = event.target
         this.setState(prevState=>({userDetails:{...prevState.userDetails, [name]:value}}))
     }
 
+    // Chooses which content to render based on API status
     renderPopupContent = ()=>{
         const {apiStatus}=this.state
         switch (apiStatus) {
@@ -94,6 +103,7 @@ class AddUserForm extends Component{
         }
     }
 
+    // initially asks for confirmation by displaying the user entered details
     renderInitialView=()=>{
         const {userDetails}=this.state
         const {firstName, lastName, email, department} = userDetails
@@ -110,6 +120,7 @@ class AddUserForm extends Component{
                     <button
                         className="add-confirm-button"
                         type="button"
+                        // on clicking yes would triggers the function to post the user to the database/API
                         onClick={this.postNewUser}
                     >
                         Yes
@@ -117,6 +128,7 @@ class AddUserForm extends Component{
                     <button
                         className="close-button"
                         type="button"
+                        //on clicking no would close the pop-up, user entered details would still persist to make necessary edits/corrections
                         onClick={()=>this.setState({isPopupOpen:false})}
                     >
                         No
@@ -126,12 +138,14 @@ class AddUserForm extends Component{
         )
     }
 
+    // used to display a spinner while fetching data (during a fetch request to the API)
     renderLoadingView = () => (
         <div className='form-loader-container'>
             <PulseLoader color="#28c840" />
         </div>
     )
 
+    //used to display failure msg when failed fetching data
     renderFailureView = () =>{
         const {failureMsg} = this.state
         return (
@@ -151,6 +165,7 @@ class AddUserForm extends Component{
         )
     }
 
+    // used to display success msg on success posting data
     renderSuccessView = () =>{
         const {successData}=this.state
         return(
@@ -165,7 +180,7 @@ class AddUserForm extends Component{
                         onClick={()=>{
                             this.setState({isPopupOpen:false})
                             this.onCancelChanges()
-                            this.props.onSuccessfulUserAdd()
+                            this.props.onSuccessfulUserAdd() //onClicking ok will redirect to dashboard page
                         }}
                     >
                         OK
@@ -175,12 +190,15 @@ class AddUserForm extends Component{
         )
     }
 
+
+    // initially form gets displayed with required input fields
     render(){
         const {userDetails, isPopupOpen}=this.state
         const {firstName, lastName, email, department} = userDetails
         return(
             <div className="add-new-user-main-container">
                 <form className="add-new-user-main-container-form" onSubmit={this.onSubmitNewUserForm}>
+                    {/* maintained common function for all the input fields to update the state */}
                     <div className="form-first-last-name-email-department-container">
                         <div className="name-input-container">
                             <label className="label-heading" htmlFor="first-name">First Name<span className="star-mark">*</span></label>
@@ -200,9 +218,11 @@ class AddUserForm extends Component{
                         </div>
                     </div>
                     <div className='submit-cancel-button-container'>
-                        <button type="submit" className="save-user-button">Save User Data</button>
+                        {/* button triggers the form submission, which then opens the confirmation pop-up separately by updating the state value */}
+                        <button type="submit" className="save-user-button">Save User Data</button> 
+                        
                         <Popup
-                            open={isPopupOpen}
+                            open={isPopupOpen} // not implementing submit button directly because it bypasses validation on required input fields
                             onClose={()=>this.setState({isPopupOpen:false})}
                             modal
                             nested
@@ -215,6 +235,7 @@ class AddUserForm extends Component{
                                 </div>
                             )}
                         </Popup>
+                        {/* on clicking cancel would reset the input fields */}
                         <button type='button' className='cancel-button' onClick={this.onCancelChanges}>Cancel</button>
                     </div>
                 </form>

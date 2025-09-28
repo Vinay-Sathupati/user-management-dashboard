@@ -10,7 +10,7 @@ import { PulseLoader } from "react-spinners"
 import { TbError404 } from "react-icons/tb"
 import { SiTicktick } from "react-icons/si"
 
-
+// API status constants to be used for loading, failure, success views
 const apiDeleteStatusConstants = {
     initial: 'INITIAL',
     inProgress: 'IN_PROGRESS',
@@ -18,26 +18,28 @@ const apiDeleteStatusConstants = {
     failure: 'FAILURE'
 }
 
-
+// Delete pop-up component using state (Child Component for UserDashboard Component)
 class DeletePopup extends Component{
     state = {apiDeleteStatus: apiDeleteStatusConstants.initial, userData: {...this.props.userData}, failureMsg:''}
 
 
+    // deletes user of specific user ID using DELETE method
     onDeletedData = async () =>{
-        this.setState({apiDeleteStatus:apiDeleteStatusConstants.inProgress})
+        this.setState({apiDeleteStatus:apiDeleteStatusConstants.inProgress}) // API status is set to progress so spinner/ loading is displayed till fetching data is complete
         const {userData} = this.state
         const url = `https://jsonplaceholder.typicode.com/users/${userData.id}`
         try{
             const response = await axios.delete(url)
             console.log("response:", response.data)
-            this.setState({apiDeleteStatus:apiDeleteStatusConstants.success})
+            this.setState({apiDeleteStatus:apiDeleteStatusConstants.success}) // renders success
         } catch (error) {
             console.log("Error:", error.message)
-            this.setState({failureMsg: error.message, apiDeleteStatus:apiDeleteStatusConstants.failure})
+            this.setState({failureMsg: error.message, apiDeleteStatus:apiDeleteStatusConstants.failure}) // renders failure with failure msg
         }
     }
     
 
+    // Chooses which content to render based on API status
     renderPopupContent = ()=>{
         const {apiDeleteStatus}=this.state
         switch (apiDeleteStatus) {
@@ -54,6 +56,7 @@ class DeletePopup extends Component{
         }
     }
 
+    // initially displays user details and asks for confirmation to delete
     renderDeleteInitialView = () =>{
         const {userData} = this.state
         const {firstName,lastName,email,department}=userData
@@ -72,10 +75,12 @@ class DeletePopup extends Component{
                         <button
                             className="delete-confirm-button"
                             type="button"
+                            // will delete the user data using API with DELETE method
                             onClick={this.onDeletedData}
                         >
                             Delete User
                         </button>
+                        {/* on clicking cancel will close the pop-up */}
                         <button
                             className="close-button"
                             type="button"
@@ -90,25 +95,27 @@ class DeletePopup extends Component{
         )
     }
 
+    //used to display failure msg when failed fetching data
     renderDeleteFailureView = () =>{
-            const {failureMsg} = this.state
-            return (
-                <div className='form-failure-container'>
-                    <TbError404 className="failure-icon" />
-                    <p className='failure-para'>{failureMsg}</p>
-                    <button 
-                        className='try-again-button' 
-                        onClick={() => {
-                            this.setState({ apiDeleteStatus: apiDeleteStatusConstants.initial });
-                            this.props.onClose();
-                        }}
-                    >
-                        Please Try Again
-                    </button>
-                </div>
-            )
-        }
+        const {failureMsg} = this.state
+        return (
+            <div className='form-failure-container'>
+                <TbError404 className="failure-icon" />
+                <p className='failure-para'>{failureMsg}</p>
+                <button 
+                    className='try-again-button' 
+                    onClick={() => {
+                        this.setState({ apiDeleteStatus: apiDeleteStatusConstants.initial });
+                        this.props.onClose();
+                    }}
+                >
+                    Please Try Again
+                </button>
+            </div>
+        )
+    }
 
+    // used to display success msg on success updating data
     renderDeleteSuccessView = () =>{
         return(
             <>
@@ -130,6 +137,7 @@ class DeletePopup extends Component{
         )
     }
 
+    // used to display a spinner while fetching data (during a fetch request to the API)
     renderDeleteLoadingView = () => (
         <div className='form-loader-container'>
             <PulseLoader color="#ff5f57" />

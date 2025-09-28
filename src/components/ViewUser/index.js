@@ -3,7 +3,7 @@ import axios from "axios";
 import { PulseLoader } from "react-spinners"
 import './index.css'
 
-
+// API status constants to be used for loading, failure, success views
 const apiStatusConstants = {
     initial: 'INITIAL',
     inProgress: 'IN_PROGRESS',
@@ -11,15 +11,16 @@ const apiStatusConstants = {
     failure: 'FAILURE',
 }
 
-
+// view user component using state (Child Component for UserManagement Component)
 class ViewUser extends Component {
     state={apiStatus: apiStatusConstants.initial, userId: '', userData:{}, failureMsg:''}
 
+    // updates state when user types user ID in input field
     onEnterUserId = event =>{
         this.setState({userId:event.target.value})
     }
 
-    // function for correct name display:
+    // function for correct name display by removing prefixes
     nameCorrection = (name, firstOrLast) =>{
         const prefixes = ["Mr.", "Mrs.", "Ms.", "Dr.", "Prof."]
         const nameArr = name.split(" ")
@@ -38,6 +39,8 @@ class ViewUser extends Component {
 
     }
 
+    // gets triggered after clicking find user button
+    // fetches details of specific user based on id
     getUserDetails = async (id)=>{
         const url =(`https://jsonplaceholder.typicode.com/users/${id}`)
 
@@ -58,13 +61,14 @@ class ViewUser extends Component {
             this.setState({apiStatus:apiStatusConstants.failure, failureMsg: error.message})
         }
     }
-
+    // prevents default behaviour on form submission
     onSubmitForm = event =>{
         event.preventDefault()
         const {userId}=this.state
         this.getUserDetails(userId)
     }
 
+    // Chooses which content to render based on API status
     renderSpecificUser = () =>{
         const {apiStatus} = this.state
 
@@ -80,12 +84,14 @@ class ViewUser extends Component {
         }
     }
 
+    // used to display a spinner while fetching data (during a fetch request to the API)
     renderLoadingView = () => (
         <div className='view-loader-container'>
             <PulseLoader color="#fc7f12" />
         </div>
     )
 
+    // displays user information after successful fetch
     renderSuccessView = () =>{
         const {userData}=this.state
         const {id, firstName,lastName,email,department}=userData
@@ -103,6 +109,7 @@ class ViewUser extends Component {
         )
     }
 
+    //displays failure msg when failed fetching data
     renderFailureView = () =>{
         const {userId, failureMsg} = this.state
         return (
